@@ -2,17 +2,17 @@ package com.springframework.recipe.service;
 
 import com.springframework.recipe.model.Recipe;
 import com.springframework.recipe.repository.RecipeRepository;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 public class RecipeServiceImplTest {
 
@@ -22,13 +22,13 @@ public class RecipeServiceImplTest {
     @Mock
     private RecipeRepository recipeRepository;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
         recipeService = new RecipeServiceImpl(recipeRepository);
     }
 
-    @After
+    @AfterEach
     public void close() throws Exception {
         closeable.close();
     }
