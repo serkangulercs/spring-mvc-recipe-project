@@ -2,6 +2,7 @@ package com.springframework.recipe.service;
 
 import com.springframework.recipe.model.Recipe;
 import com.springframework.recipe.repository.RecipeRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -15,15 +16,21 @@ import java.util.Set;
 
 public class RecipeServiceImplTest {
 
-    RecipeServiceImpl recipeService;
+    private RecipeServiceImpl recipeService;
+    private AutoCloseable closeable;
 
     @Mock
-    RecipeRepository recipeRepository;
+    private RecipeRepository recipeRepository;
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
         recipeService = new RecipeServiceImpl(recipeRepository);
+    }
+
+    @After
+    public void close() throws Exception {
+        closeable.close();
     }
 
     @Test
