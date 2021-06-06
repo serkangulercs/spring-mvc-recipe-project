@@ -1,5 +1,7 @@
 package com.springframework.recipe.service;
 
+import com.springframework.recipe.converter.RecipeCommandToRecipe;
+import com.springframework.recipe.converter.RecipeToRecipeCommand;
 import com.springframework.recipe.model.Recipe;
 import com.springframework.recipe.repository.RecipeRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -24,10 +26,16 @@ public class RecipeServiceImplTest {
     @Mock
     private RecipeRepository recipeRepository;
 
+    @Mock
+    RecipeToRecipeCommand recipeToRecipeCommand;
+
+    @Mock
+    RecipeCommandToRecipe recipeCommandToRecipe;
+
     @BeforeEach
     public void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        recipeService = new RecipeServiceImpl(recipeRepository);
+        recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
     @AfterEach
@@ -61,6 +69,5 @@ public class RecipeServiceImplTest {
         assertNotNull(returnedRecipe);
         verify(recipeRepository, times(1)).findById(any());
         verify(recipeRepository, never()).findAll();
-
     }
 }
