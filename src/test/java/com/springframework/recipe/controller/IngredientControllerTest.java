@@ -4,6 +4,7 @@ import com.springframework.recipe.command.IngredientCommand;
 import com.springframework.recipe.command.RecipeCommand;
 import com.springframework.recipe.service.IngredientService;
 import com.springframework.recipe.service.RecipeService;
+import com.springframework.recipe.service.UnitOfMeasureService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,9 @@ class IngredientControllerTest {
     @Mock
     private IngredientService ingredientService;
 
+    @Mock
+    private UnitOfMeasureService unitOfMeasureService;
+
     private IngredientController controller;
     private MockMvc mockMvc;
     private AutoCloseable closeable;
@@ -34,7 +38,7 @@ class IngredientControllerTest {
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
 
-        controller = new IngredientController(recipeService, ingredientService);
+        controller = new IngredientController(recipeService, ingredientService, unitOfMeasureService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
