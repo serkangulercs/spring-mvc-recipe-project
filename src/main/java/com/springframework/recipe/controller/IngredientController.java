@@ -1,6 +1,8 @@
 package com.springframework.recipe.controller;
 
 import com.springframework.recipe.command.IngredientCommand;
+import com.springframework.recipe.command.RecipeCommand;
+import com.springframework.recipe.command.UnitOfMeasureCommand;
 import com.springframework.recipe.service.IngredientService;
 import com.springframework.recipe.service.RecipeService;
 import com.springframework.recipe.service.UnitOfMeasureService;
@@ -36,6 +38,26 @@ public class IngredientController {
         return "recipe/ingredient/show";
     }
 
+    @GetMapping
+    @RequestMapping("recipe/{recipeId}/ingredient/new")
+    public String newIngredient(@PathVariable String recipeId, Model model) {
+        //make sure we have a good id value
+        RecipeCommand recipeCommand = recipeService.findCommandById(Long.valueOf(recipeId));
+        //todo raise exception if null
+
+        //need to return back parent id for hidden form property
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setRecipeId(Long.valueOf(recipeId));
+        model.addAttribute("ingredient", ingredientCommand);
+
+        //init uom
+        ingredientCommand.setUom(new UnitOfMeasureCommand());
+
+        model.addAttribute("uomList", unitOfMeasureService.findAll());
+
+        return "recipe/ingredient/ingredientForm";
+    }
+
     @PostMapping
     @RequestMapping("recipe/{recipeId}/ingredient/{id}/update")
     public String updateIngredient(@PathVariable String recipeId, @PathVariable String id, Model model) {
@@ -44,7 +66,7 @@ public class IngredientController {
 
         model.addAttribute("uomList", unitOfMeasureService.findAll());
 
-        return "/recipe/ingredient/ingredientForm";
+        return "recipe/ingredient/ingredientForm";
     }
 
     @PostMapping
