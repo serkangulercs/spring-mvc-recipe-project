@@ -1,7 +1,9 @@
 package com.springframework.recipe.service;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.springframework.recipe.converter.RecipeCommandToRecipe;
 import com.springframework.recipe.converter.RecipeToRecipeCommand;
+import com.springframework.recipe.exception.NotFoundException;
 import com.springframework.recipe.model.Recipe;
 import com.springframework.recipe.repository.RecipeRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -14,8 +16,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class RecipeServiceImplTest {
@@ -69,6 +70,23 @@ public class RecipeServiceImplTest {
         assertNotNull(returnedRecipe);
         verify(recipeRepository, times(1)).findById(any());
         verify(recipeRepository, never()).findAll();
+    }
+
+    @Test
+    public void getRecipeByIdNotFound() throws Exception {
+
+        Optional<Recipe> recipeOptional = Optional.empty();
+
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        Exception exception = assertThrows(NotFoundException.class, () -> {
+            recipeService.findById(1L);;
+        });
+
+        String expectedMessage = "Recipe Not Found";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
