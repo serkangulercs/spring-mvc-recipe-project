@@ -1,6 +1,5 @@
 package com.springframework.recipe.service;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.springframework.recipe.converter.RecipeCommandToRecipe;
 import com.springframework.recipe.converter.RecipeToRecipeCommand;
 import com.springframework.recipe.exception.NotFoundException;
@@ -21,17 +20,14 @@ import static org.mockito.Mockito.*;
 
 public class RecipeServiceImplTest {
 
-    private RecipeServiceImpl recipeService;
-    private AutoCloseable closeable;
-
-    @Mock
-    private RecipeRepository recipeRepository;
-
     @Mock
     RecipeToRecipeCommand recipeToRecipeCommand;
-
     @Mock
     RecipeCommandToRecipe recipeCommandToRecipe;
+    private RecipeServiceImpl recipeService;
+    private AutoCloseable closeable;
+    @Mock
+    private RecipeRepository recipeRepository;
 
     @BeforeEach
     public void setUp() {
@@ -80,13 +76,20 @@ public class RecipeServiceImplTest {
         when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
 
         Exception exception = assertThrows(NotFoundException.class, () -> {
-            recipeService.findById(1L);;
+            recipeService.findById(1L);
         });
 
         String expectedMessage = "Recipe Not Found";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void getRecipeById_throws_NumberFormatException_when_id_is_not_a_number() throws Exception {
+        assertThrows(NumberFormatException.class, () -> {
+            recipeService.findById(Long.valueOf("asd"));
+        });
     }
 
     @Test
