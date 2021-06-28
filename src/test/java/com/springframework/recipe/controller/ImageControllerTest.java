@@ -38,7 +38,9 @@ class ImageControllerTest {
 
         controller = new ImageController(imageService, recipeService);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .build();
     }
 
     @AfterEach
